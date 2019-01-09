@@ -1,0 +1,5 @@
+export LD_LIBRARY_PATH=/home/guangyu/gcc5.3/build/mpc/lib:/home/guangyu/gcc5.3/build/gmp/lib:/home/guangyu/gcc5.3/build/mpfr/lib:/home/guangyu/gcc5.3/build/gcc/lib:$LD_LIBRARY_PATH
+
+export LD_LIBRARY_PATH=/home/guangyu/gcc5.3/build/gcc/lib:$LD_LIBRARY_PATH
+export CC=/home/guangyu/gcc5.3/build/gcc/bin/gcc
+export CXX=/home/guangyu/gcc5.3/build/gcc/bin/g++

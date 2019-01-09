@@ -1,0 +1,49 @@
+总体上按这个来，https://www.cnblogs.com/damonxu/p/6434265.html
+
+wget http://www.netgull.com/gcc/releases/gcc-5.3.0/gcc-5.3.0.tar.bz2
+
+ ./configure -prefix=/home/guangyu/gcc5.3/build/gcc -enable-threads=posix -disable-checking -disable-multilib -enable-languages=c,c++  --with-gmp=/home/guangyu/gcc5.3/build/gmp  --with-mpfr=/home/guangyu/gcc5.3/build/mpfr  --with-mpc=/home/guangyu/gcc5.3/build/mpc
+
+
+cfns.gperf:101:1: error: ‘const char* libc_name_p(const char*, unsigned int)’ redeclared inline with ‘gnu_inline’ attribute
+用此解决
+https://gcc.gnu.org/git/?p=gcc.git;a=commitdiff;h=ec1cc0263f156f70693a62cf17b254a0029f4852
+
+
+######
+“checking for suffix of object files... configure: error: cannot compute suffix of object files: cannot compile
+从目录中的config.log发现缺少
+libmpc.so.2  libmpfr.so.1
+export LD_LIBRARY_PATH=$LD_LIBRARY_PATH:/home/guangyu/gcc5.3/build/mpc/lib:/home/guangyu/gcc5.3/build/gmp/lib:/home/guangyu/gcc5.3/build/mpfr/lib
+其他几个类似
+
+#####
+./md-unwind-support.h:141:18: error: field 'uc' has incomplete type
+struct ucontext uc;
+
+struct ucontext 改为 ucontext_t
+
+#####
+sanitizer_stoptheworld_linux_libcdep.cc:237:22: error: aggregate ‘sigaltstack handler_stack’ has incomplete type and cannot be defined
+
+libsanitizer/sanitizer_common/sanitizer_stoptheworld_linux_libcdep.cc
+struct sigaltstack to stack_t
+
+error: cannot convert ‘stack_t*’ to ‘const sigaltstack*’
+libsanitizer/sanitizer_common/sanitizer_linux.cc
+libsanitizer/sanitizer_common/sanitizer_linux.h
+uptr internal_sigaltstack(const struct sigaltstack *ss, struct sigaltstack *oss)  改为
+uptr internal_sigaltstack(const void *ss, void *oss)
+去掉struct sigaltstack
+
+#####
+libsanitizer/asan/asan_linux.cc:222:20: error: ‘SIGSEGV’ was not declared in this scope
+libsanitizer/asan/asan_linux.cc
++#include <signal.h>
+
+#####
+libsanitizer/tsan/tsan_platform_linux.cc:380:16: error: ‘statp’ was not declared in this scope
+-  __res_state *statp = (__res_state*)state;
++  struct __res_state *statp = (struct __res_state*)state;
+
+
