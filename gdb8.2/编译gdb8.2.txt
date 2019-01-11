@@ -1,0 +1,5 @@
+./configure --prefix=/home/guangyu/Tool/gdb
+
+make 
+
+make install
